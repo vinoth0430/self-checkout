@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% block title %}Checkout{% endblock %}
+{% block content %}
+    <div class="center">
+        <h1>Redirecting to payment...</h1>
+        <p style="color:#64748b;">Pay ₹{{ grand_total }}</p>
+
+        <div style="background:#f0f9ff; border:1px solid #bae6fd; border-radius:10px; padding:16px; margin-top:20px; text-align:left; font-size:14px;">
+            <strong>🧪 Test Mode — use this card:</strong><br>
+            Card: 5267 3181 8797 5449<br>
+            Expiry: 12/30 &nbsp; CVV: 123<br>
+            OTP: 123456
+        </div>
+    </div>
+
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+    <script>
+        var options = {
+            "key": "{{ key_id }}",
+            "amount": "{{ amount }}",
+            "currency": "INR",
+            "name": "Self Checkout Store",
+            "description": "Order Payment",
+            "order_id": "{{ order_id }}",
+            "handler": function (response) {
+                var form = document.createElement('form');
+                form.method = 'POST';
+                form.action = "{% url 'payment_success' %}";
+
+                var csrf = document.createElement('input');
+                csrf.type = 'hidden'; csrf.name = 'csrfmiddlewaretoken'; csrf.value = '{{ csrf_token }}';
+                form.appendChild(csrf);
+
+                var email = document.createElement('input');
+                email.type = 'hidden'; email.name = 'email'; email.value = "{{ email }}";
+                form.appendChild(email);
+
+                document.body.appendChild(form);
+                form.submit();
+            },
+            "theme": { "color": "#16a34a" }
+        };
+        var rzp = new Razorpay(options);
+        rzp.open();
+    </script>
+{% endblock %}

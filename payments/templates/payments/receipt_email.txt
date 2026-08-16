@@ -1,0 +1,12 @@
+Self Checkout Store — Receipt
+Transaction #{{ transaction.id }}
+Date: {{ transaction.created_at }}
+
+Items:
+{% for item in transaction.line_items.all %}{{ item.product_name }} x{{ item.quantity }} - ₹{{ item.price_at_sale }} (GST ₹{{ item.gst_at_sale }})
+{% endfor %}
+Subtotal: ₹{{ transaction.subtotal }}
+GST: ₹{{ transaction.gst_total }}
+Grand Total: ₹{{ transaction.grand_total }}
+
+Thank you for shopping with us!

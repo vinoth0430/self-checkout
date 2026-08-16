@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% block title %}Scan Item{% endblock %}
+{% block content %}
+    <h1>🛒 Scan Item</h1>
+    <form method="post" autocomplete="off">
+        {% csrf_token %}
+        <input type="text" name="barcode" autofocus placeholder="Scan or type barcode">
+    </form>
+
+    {% if error %}
+        <div class="error-msg">{{ error }}</div>
+    {% endif %}
+
+    {% if items %}
+    <h2>Cart</h2>
+    <table>
+        <tr><th>Product</th><th>Qty</th><th>Price</th><th>GST</th><th>Total</th></tr>
+        {% for item in items %}
+        <tr>
+            <td>{{ item.product.name }}</td>
+            <td>{{ item.qty }}</td>
+            <td>₹{{ item.product.price }}</td>
+            <td>₹{{ item.line_gst }}</td>
+            <td>₹{{ item.line_subtotal }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+
+    <h3>Subtotal: ₹{{ subtotal }}</h3>
+    <h3>GST: ₹{{ gst_total }}</h3>
+    <div class="grand-total">Grand Total: ₹{{ grand_total }}</div>
+
+    <form method="get" action="{% url 'create_order' %}">
+        <input type="email" name="email" placeholder="Email for receipt (optional)" style="margin-bottom:10px;">
+        <button type="submit" class="btn-primary">Pay Now (₹{{ grand_total }})</button>
+    </form>
+
+    <form method="post">
+        {% csrf_token %}
+        <button type="submit" name="clear" value="1" class="btn-secondary">Clear Cart</button>
+    </form>
+    {% else %}
+    <p style="color:#94a3b8; margin-top:20px;">Cart is empty — scan an item to begin.</p>
+    {% endif %}
+{% endblock %}

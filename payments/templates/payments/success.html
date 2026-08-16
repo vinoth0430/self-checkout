@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block title %}Payment Successful{% endblock %}
+{% block content %}
+    <div class="center">
+        <div class="success-icon">✓</div>
+        <h1>Payment Successful!</h1>
+        <p style="color:#64748b; margin-bottom:20px;">Transaction #{{ transaction.id }}</p>
+    </div>
+
+    <table>
+        <tr><th>Product</th><th>Qty</th><th>Price</th><th>GST</th></tr>
+        {% for item in transaction.line_items.all %}
+        <tr>
+            <td>{{ item.product_name }}</td>
+            <td>{{ item.quantity }}</td>
+            <td>₹{{ item.price_at_sale }}</td>
+            <td>₹{{ item.gst_at_sale }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+
+    <h3>Subtotal: ₹{{ transaction.subtotal }}</h3>
+    <h3>GST: ₹{{ transaction.gst_total }}</h3>
+    <div class="grand-total">Grand Total: ₹{{ transaction.grand_total }}</div>
+
+    {% if transaction.customer_email %}
+        <p style="color:#16a34a; margin-top:10px;">📧 Receipt sent to {{ transaction.customer_email }}</p>
+    {% endif %}
+
+    <a href="/"><button class="btn-primary" style="margin-top:20px;">Start New Order</button></a>
+{% endblock %}
