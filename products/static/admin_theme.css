@@ -1,0 +1,8 @@
+#header { background: #151B3D; }
+#branding h1 { color: #FAFAF8 !important; }
+.module h2, .module caption, .inline-group h2 { background: #151B3D; }
+a:link, a:visited { color: #E8552C; }
+.button, input[type=submit], input[type=button], .submit-row input, a.button {
+    background: #E8552C; border-radius: 6px;
+}
+.button:hover, input[type=submit]:hover { background: #C9451F; }
