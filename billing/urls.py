@@ -7,4 +7,5 @@ urlpatterns = [
     path('api/scan/', views.api_scan, name='api_scan'),
     path('api/clear/', views.api_clear, name='api_clear'),
     path('api/remove/', views.api_remove, name='api_remove'),
+    path('api/delete/', views.api_delete_item, name='api_delete_item'),
 ]

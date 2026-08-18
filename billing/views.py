@@ -82,6 +82,7 @@ def api_scan(request):
 
 @csrf_exempt
 def api_remove(request):
+    """Remove one unit of an item; deletes the line once qty hits 0."""
     if request.method != 'POST':
         return JsonResponse({'error': 'Invalid method'}, status=405)
     data = json.loads(request.body or '{}')
@@ -91,6 +92,21 @@ def api_remove(request):
         cart[barcode] -= 1
         if cart[barcode] <= 0:
             del cart[barcode]
+        request.session['cart'] = cart
+        request.session.modified = True
+    return JsonResponse(serialize_cart(request))
+
+
+@csrf_exempt
+def api_delete_item(request):
+    """Delete an item line entirely, regardless of quantity."""
+    if request.method != 'POST':
+        return JsonResponse({'error': 'Invalid method'}, status=405)
+    data = json.loads(request.body or '{}')
+    barcode = data.get('barcode', '')
+    cart = request.session.get('cart', {})
+    if barcode in cart:
+        del cart[barcode]
         request.session['cart'] = cart
         request.session.modified = True
     return JsonResponse(serialize_cart(request))
